@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Smart Complaint System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <div class="nav-buttons">
+                <span id="userNameDisplay">Welcome, Admin</span>
+                <button id="logoutBtn" class="btn btn-danger btn-small">Logout</button>
+            </div>
+        </div>
+
+        <div id="messageBox"></div>
+
+        <!-- System Stats (Bonus) -->
+        <div class="stats-container" id="statsContainer">
+            <div class="stat-box">
+                <h3>Total Pending</h3>
+                <div class="count" id="statPending">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Total In Progress</h3>
+                <div class="count" id="statInProgress">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Total Resolved</h3>
+                <div class="count" id="statResolved">0</div>
+            </div>
+        </div>
+        
+        <!-- Analytics Chart -->
+        <div class="complaint-form-card">
+            <h2>Analytics Overview</h2>
+            <div style="height: 300px; display: flex; justify-content: center; margin-top: 15px;">
+                <canvas id="statsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Filters (Bonus) -->
+        <div class="complaint-form-card" style="padding: 15px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <label><strong>Filter by Status:</strong></label>
+                <select id="statusFilter" class="form-group" style="margin-bottom: 0; width: auto; padding: 5px;">
+                    <option value="All">All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                </select>
+                <button id="filterBtn" class="btn btn-small" style="margin-top: 0; width: auto;">Apply Filter</button>
+            </div>
+        </div>
+
+        <!-- All Complaints List -->
+        <h2>All System Complaints</h2>
+        <div class="table-container" style="margin-top: 15px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Issue Title</th>
+                        <th>Description</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="adminComplaintsList">
+                    <tr><td colspan="7" style="text-align: center;">Loading complaints...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Check authentication
+        if(!isAuthenticated() || getUser().role !== 'admin') {
+            if(getUser() && getUser().role === 'user') {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        document.getElementById('userNameDisplay').textContent = `Welcome, Admin ${getUser().username}`;
+
+        // Handle Logout
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+
+        // Filter listener
+        document.getElementById('filterBtn').addEventListener('click', () => {
+            const status = document.getElementById('statusFilter').value;
+            loadAdminComplaints(status);
+        });
+
+        // Initial Load
+        window.onload = () => {
+            loadAdminComplaints('All');
+            loadStats();
+        };
+    </script>
+</body>
+</html>

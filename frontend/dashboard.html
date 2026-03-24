@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Complaint System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>User Dashboard</h1>
+            <div class="nav-buttons">
+                <span id="userNameDisplay">Welcome, User</span>
+                <button id="logoutBtn" class="btn btn-danger btn-small">Logout</button>
+            </div>
+        </div>
+
+        <div id="messageBox"></div>
+
+        <!-- Complaint Submission Form -->
+        <div class="complaint-form-card">
+            <h2>Submit a New Complaint</h2>
+            <form id="complaintForm" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required placeholder="Brief title of your issue">
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="4" required placeholder="Detailed description of the problem... (Hint: Use words like 'urgent' for high priority)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="attachment">Attachment (Optional)</label>
+                    <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx">
+                </div>
+                
+                <button type="submit" class="btn">Submit Complaint</button>
+            </form>
+        </div>
+
+        <!-- User's Complaints List -->
+        <h2>My Complaints</h2>
+        <div class="complaints-grid" id="complaintsList" style="margin-top: 15px;">
+            <!-- Complaints will be loaded here dynamically -->
+            <p>Loading complaints...</p>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Check authentication
+        if(!isAuthenticated() || getUser().role !== 'user') {
+            if(getUser() && getUser().role === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        document.getElementById('userNameDisplay').textContent = `Welcome, ${getUser().username}`;
+
+        // Handle Logout
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+
+        // Handle Form Submission
+        document.getElementById('complaintForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const attachment = document.getElementById('attachment').files[0];
+            
+            await submitComplaint(title, description, attachment);
+            
+            // Clear form
+            document.getElementById('title').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('attachment').value = '';
+            
+            // Reload complaints
+            loadUserComplaints();
+        });
+
+        // Initial Load
+        window.onload = loadUserComplaints;
+    </script>
+</body>
+</html>

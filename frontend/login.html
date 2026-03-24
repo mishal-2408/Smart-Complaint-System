@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Complaint System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <h2>System Login</h2>
+        <div id="messageBox"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required placeholder="Enter username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter password">
+            </div>
+            
+            <button type="submit" class="btn">Login</button>
+        </form>
+        
+        <a href="register.html" class="link">Don't have an account? Register here</a>
+        <a href="admin-login.html" class="link" style="margin-top: 10px; color: #666; font-size: 14px;">Admin Login</a>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Specific logic for login page
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            await loginUser(username, password);
+        });
+    </script>
+</body>
+</html>
