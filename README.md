@@ -77,5 +77,5 @@ Contributions are welcome! Feel free to fork this repo and improve it.
 
 📌 Author
 
-👤 Mishal S G
+👤 Mishal S 
 🎓 Aspiring Full Stack Developer
