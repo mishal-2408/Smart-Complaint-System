@@ -75,6 +75,10 @@ Users can upload images while submitting complaints, making issues more clear an
 
 Contributions are welcome! Feel free to fork this repo and improve it.
 
+ Output Sample 
+
+ See the complaint management system.pdf file for the information.
+
 📌 Author
 
 👤 Mishal S 
